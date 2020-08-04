@@ -1,0 +1,120 @@
+require 'pry'
+load 'Node.rb'
+load 'Comparable.rb'
+
+# tree class
+class Tree
+  attr_reader :tree, :root, :right_nodes, :left_nodes, :printed_array
+  def initialize
+    @root = nil
+    @tree = []
+  end
+
+  def build(array)
+    @array = array
+    array.sort!.uniq!
+    build_tree(array)
+  end
+
+  def build_tree(array, start = 0, last = (array.length - 1))
+    return nil if start > last
+    middle = (start + last) / 2
+    puts 'middle ||||| '
+    p middle
+    puts 'array ||||| '
+    p array
+    root = Node.new(array[middle])
+    @tree << root
+    root.left_node = build_tree(array, start, middle - 1)
+    root.right_node = build_tree(array, middle + 1, last)
+    root
+  end
+
+  def print_arr
+    @printed_array = []
+    tree_to_arr(@tree[0])
+  end
+
+  def tree_to_arr(node)
+    return if node.nil?
+    @printed_array << node.value.to_s
+    tree_to_arr(node.left_node, pos - 2)
+    tree_to_arr(node.right_node, pos + 2)
+  end
+
+  def breadth_first(root = @tree[0])
+    queue = []
+    @output = []
+    queue << root
+    while !queue_is_empty?(queue)
+      current = queue.shift
+      if current != 'nil'
+         if current.right_node
+          queue << current.right_node
+         else 
+          queue << 'nil'
+         end
+         if current.left_node 
+          queue << current.left_node 
+         else 
+          queue << 'nil'
+         end
+         @output << current.value
+       else   
+        @output << 'nil'
+        queue << 'nil'
+        queue << 'nil'
+       end
+      end
+    puts "output||||| #{@output.join(" ")}"
+    @output
+  end
+
+  def queue_is_empty?(array)
+    isEmpty = true
+    array.each{ |e| isEmpty = false if e != 'nil' }
+    return isEmpty
+  end 
+
+  binding.pry 
+
+  def find_levels
+    @all_levels = []
+    level = 0
+    remaining = @output
+    until remaining.empty?
+      n = 2**level
+      @all_levels << remaining.take(n)
+      remaining = remaining.drop(n)
+      level += 1
+    end
+    puts "all levels ||||||||| #{@all_levels}"
+    @all_levels
+  end
+
+  def fill_void
+    @filled_levels = @all_levels.each_with_index do |arr, index|
+      arr.reverse!
+    end 
+    puts "filled Levels ||||| #{@filled_levels}"
+    @filled_levels
+  end
+
+  def print_tree
+    num = 9
+    @filled_levels.each_with_index do |arr, _i|
+      spaces = ' ' * num
+      p arr.join(spaces).center(50)
+      num -= 2
+    end
+  end
+end
+
+tree = Tree.new
+array = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]
+tree.build(array)
+tree.print_arr
+tree.breadth_first
+tree.find_levels
+tree.fill_void
+tree.print_
