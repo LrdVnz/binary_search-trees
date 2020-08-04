@@ -119,12 +119,10 @@ class Tree
   end
 
   def delete(node, root = @tree[0])
-    if root.left_node != nil && node == root.left_node.value
-        pos = @tree.index(root)
-        return @tree[pos].left_node = nil 
-    elsif root.right_node != nil && node == root.right_node.value
-        pos = @tree.index(root)
-        return @tree[pos].right_node = nil 
+    if node == root.value 
+      pos = @tree.index(root)
+      puts "pos return ||| #{pos}"
+      return delete_children(@tree[pos], pos)
     end
      puts "root ||| #{root.value}"
      puts "root left #{root.left_node}" 
@@ -134,77 +132,27 @@ class Tree
       delete(node, root.left_node)  
      elsif node > root.value
       delete(node, root.right_node)
+     elsif node == root.value
+      delete(node, root)
      end
   end
 
 
-  def delete_children(value, root)
-     if root.right_node == nil && root.left_node == nil
-        pos = @tree.index[value.value]
-       return @tree[pos].value = root 
-     end
-
-     if root.left_node != nil
-      delete_children(value, root.left_node)
-     elsif root.right_node != nil
-      delete_children(value, root.right_node) 
-     end
-  end
-
-=begin
-First code for deleting nodes with children
-def delete(node, root = @tree[0])
-    if root.left_node != nil && node == root.left_node.value
-      if root.left_node.left_node == nil 
-        pos = @tree.index(root)
-        return @tree[pos].right_node = nil
-      elsif root.left_node.left_node != nil 
-        pos = @tree.index(root)
-        delete_children(node, @tree[pos].left_node )
-      elsif root.right_node.right_node != nil
-        pos = @tree.index(root)
-        delete_children(node ,@tree[pos].right_node ) 
-      end
-    elsif root.right_node != nil && node == root.right_node.value
-      if root.right_node.right_node == nil && root.left_node.left_node == nil 
-        pos = @tree.index(root)
-        return @tree[pos].right_node = nil
-      elsif root.left_node.left_node != nil
-        pos = @tree.index(root)
-        delete_children(node, @tree[pos].left_node )
-      elsif root.right_node.right_node != nil
-        pos = @tree.index(root)
-        delete_children(node, @tree[pos].right_node )
-      end
+  def delete_children(root, pos)
+    if root.left_node == nil && root.right_node == nil
+      subpos = @tree.index(root)
+      puts "subpos ||| #{subpos}"
+      @tree[pos].value = root.value 
+      return @tree[subpos].value = "nil" 
     end
-     puts "root ||| #{root.value}"
-     puts "root left #{root.left_node}" 
-     puts "root right #{root.right_node}"
-     puts "node ||| #{node}"
-     if node < root.value
-      delete(node, root.left_node)  
-     elsif node > root.value
-      delete(node, root.right_node)
-     end
+    puts "child_root |||| #{root.value}"
+    puts "pos child |||| #{pos}"
+    if root.right_node != nil
+      delete_children(root.right_node, pos)
+    elsif root.right_node != nil
+      delete_children(root.right_node, pos)
+    end
   end
-
-
-  def delete_children(value, root)
-     if root.right_node == nil && root.left_node == nil
-        pos = @tree.index[value.value]
-       return @tree[pos].value = root 
-     end
-
-     if root.left_node != nil
-      delete_children(value, root.left_node)
-     elsif root.right_node != nil
-      delete_children(value, root.right_node) 
-     end
-  end
-
-
-
-=end
 
 end
 
