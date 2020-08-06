@@ -62,8 +62,6 @@ class Tree
    breadth_first
   end
 
-  private 
-
   def update_tree
     breadth_first
     find_levels
@@ -144,8 +142,30 @@ class Tree
     is_empty
   end
 
-  def breadth_first_rec(root = @tree[0], queue = [@tree[0]], @output = [])
-   
+  def breadth_first_rec(current = 0, queue = [@tree[0]], output = [], root = @tree[0])
+   if queue.all?{|n| n == 'nil'}
+    return output
+   end 
+
+   current = queue.shift
+   if current != 'nil'
+     if current.left_node
+       queue << current.left_node
+     else
+       queue << 'nil'
+     end
+     if current.right_node
+       queue << current.right_node
+     else
+       queue << 'nil'
+     end
+     output << current.value
+   else
+     output << 'nil'
+     queue << 'nil'
+     queue << 'nil'
+   end
+   breadth_first_rec(current, queue, output)
   end
 
   def delete_with_children(root, pos)
