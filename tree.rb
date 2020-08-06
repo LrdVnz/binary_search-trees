@@ -1,6 +1,6 @@
 require 'pry'
-load 'Node.rb'
-load 'Comparable.rb'
+load 'node.rb'
+load 'comparable.rb'
 
 # tree class
 class Tree
@@ -49,7 +49,11 @@ class Tree
     if node == root.value
       pos = @tree.index(root)
       puts "pos return ||| #{pos}"
-      return delete_children(@tree[pos], pos)
+      if !@tree[pos].right_node.nil?
+       return delete_with_children(@tree[pos].right_node, pos)
+      elsif !@tree[pos].right_node.nil?
+       return delete_with_children(@tree[pos], pos)
+      end
     end
     puts "root ||| #{root.value}"
     puts "root left #{root.left_node}"
@@ -111,21 +115,25 @@ class Tree
     @output
   end
 
-  def delete_children(root, pos)
-    if root.left_node.nil? && root.right_node.nil?
+  def delete_with_children(root, pos)
+    if root.left_node.nil?
       subpos = @tree.index(root)
       puts "subpos ||| #{subpos}"
       @tree[pos].value = root.value
+      if root.right_node.nil?
       return @tree[subpos].value = 'nil'
+      end
     end
     puts "child_root |||| #{root.value}"
     puts "pos child |||| #{pos}"
-    if !root.right_node.nil?
-      delete_children(root.right_node, pos)
-    elsif !root.right_node.nil?
-      delete_children(root.right_node, pos)
+    if !root.left_node.nil?  
+      delete_with_children(root.left_node, pos)    
+    elsif !root.left_node.nil?
+      delete_with_children(root.left_node, pos)
     end
   end
+
+  
 
   def queue_is_empty?(array)
     is_empty = true
