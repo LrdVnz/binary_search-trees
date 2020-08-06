@@ -19,12 +19,6 @@ class Tree
     print_tree
   end
 
-  def update_tree
-    breadth_first
-    find_levels
-    print_tree
-  end
-
   def insert(node, root = @tree[0])
     if root.left_node.nil? && node < root.value
       pos = @tree.index(root)
@@ -44,32 +38,64 @@ class Tree
       return 'node already present'
     end
   end
+  
+  def delete(node)
+   delete_method(node, @tree[0])
+   update_tree
+  end
+   
+  def find(node, root = @tree[0])
+    if node == root.value
+      pos = @tree.index(root)
+      puts "node found. It is #{root}"
+      puts "the index is : #{pos}"
+      return "the value is : #{root.value}"
+    end
+    if node < root.value
+      find(node, root.left_node)
+    elsif node > root.value
+      find(node, root.right_node)
+    end
+  end
 
-  def delete(node, root = @tree[0])
+  def level_order
+   breadth_first
+  end
+
+  private 
+
+  def update_tree
+    breadth_first
+    find_levels
+    print_tree
+  end
+
+  def delete_method(node, root)
     if node == root.value
       pos = @tree.index(root)
       puts "pos return ||| #{pos}"
-      if !@tree[pos].right_node.nil?
+      puts "tree pos #{@tree[pos].value}"
+      puts "root #{root.value}"
+      if root.right_node.nil? && root.left_node.nil?
+       puts "condition checked ------"
+       return @tree[pos].value = "nil"
+      elsif !root.right_node.nil?
        return delete_with_children(@tree[pos].right_node, pos)
-      elsif !@tree[pos].right_node.nil?
+      elsif !root.left_node.nil?
        return delete_with_children(@tree[pos], pos)
       end
     end
     puts "root ||| #{root.value}"
     puts "root left #{root.left_node}"
     puts "root right #{root.right_node}"
-    puts "node ||| #{node}"
     if node < root.value
-      delete(node, root.left_node)
+      delete_method(node, root.left_node)
     elsif node > root.value
-      delete(node, root.right_node)
+      delete_method(node, root.right_node)
     elsif node == root.value
-      delete(node, root)
+      delete_method(node, root)
     end
   end
-
-  private
-
 
   def build_tree(array, start = 0, last = (array.length - 1))
     return nil if start > last
@@ -107,12 +133,19 @@ class Tree
         @output << 'nil'
         queue << 'nil'
         queue << 'nil'
-       end
-      puts 'output ||||'
-      puts @output.to_s
       end
-    puts "output||||| #{@output.join(' ')}"
+    end
     @output
+  end
+
+  def queue_is_empty?(array)
+    is_empty = true
+    array.each { |e| is_empty = false if e != 'nil' }
+    is_empty
+  end
+
+  def breadth_first_rec(root = @tree[0], queue = [@tree[0]], @output = [])
+   
   end
 
   def delete_with_children(root, pos)
@@ -120,8 +153,10 @@ class Tree
       subpos = @tree.index(root)
       puts "subpos ||| #{subpos}"
       @tree[pos].value = root.value
-      if root.right_node.nil?
-      return @tree[subpos].value = 'nil'
+      if !root.right_node.nil?
+       replace_node_children(root.right_node, subpos)
+      else
+       @tree[subpos] = nil 
       end
     end
     puts "child_root |||| #{root.value}"
@@ -132,13 +167,25 @@ class Tree
       delete_with_children(root.left_node, pos)
     end
   end
-
-  
-
-  def queue_is_empty?(array)
-    is_empty = true
-    array.each { |e| is_empty = false if e != 'nil' }
-    is_empty
+   
+  def replace_node_children(root, pos)
+    if root.left_node.nil? && root.right_node.nil?
+      subpos = @tree.index(root)
+      puts "(replace base case) subpos ||| #{subpos}"
+      puts "(replace base case) tree subpos #{@tree[subpos].value}"
+      puts "(replace base case) root value #{root.value}"
+      puts "(replace base case) pos ||| #{pos}"
+      puts "(replace base case) tree pos #{@tree[pos].value}"
+      @tree[pos].value = root.value 
+      return @tree[subpos].value = "nil"
+    end
+    puts "(replace) root |||| #{root.value}"
+    puts "(replace) pos |||| #{pos}"
+    if !root.left_node.nil?  
+      delete_with_children(root.left_node, pos)    
+    elsif !root.left_node.nil?
+      delete_with_children(root.left_node, pos)
+    end
   end
 
   def find_levels
