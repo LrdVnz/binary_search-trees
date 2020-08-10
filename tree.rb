@@ -15,7 +15,7 @@ class Tree
     @array = array
     array.sort!.uniq!
     build_tree(array)
-    breadth_first
+    level_order
     find_levels
     pretty_print
   end
@@ -53,11 +53,21 @@ class Tree
   end
 
   def update
-    breadth_first
+    level_order
     newarr = @output
     otherarr = newarr.delete_if { |a| a == 'nil' }
     build_tree(@output)
-    breadth_first
+    level_order
+    find_levels
+    pretty_print
+  end
+
+  def rebalance
+    level_order
+    newarr = @output
+    otherarr = newarr.delete_if { |a| a == '-' }.sort
+    @tree = []
+    build_tree(otherarr)
     find_levels
     pretty_print
   end
@@ -202,7 +212,7 @@ class Tree
     root
   end
 
-  def breadth_first(root = @tree[0])
+  def level_order(root = @tree[0])
     queue = []
     @output = []
     queue << root
@@ -273,27 +283,57 @@ class Tree
     end
   end
 
-  def balanced?(node = @tree[0], num = 0, levels = [], isbalanced = true)
+  def balanced?
+   @isbalanced = true
+   balanced_method
+   @isbalanced
+  end
+
+  def balanced_method(node = @tree[0], num = 0, levels = [])
     if node.nil?
       levels << num
       num = 0
       if levels.length >= 2
         levels.sort!
-        isbalanced = false if (levels[-1] - levels[-2]) > 1 || (levels[-1] - levels[-2]) < 0
+        @isbalanced = false if (levels[-1] - levels[-2]) > 1 || (levels[-1] - levels[-2]) < 0
       end
-      return isbalanced
+      return levels
    end
     puts "verify_node |||| #{node}"
     puts "verify_num ||| #{num}"
     puts "verify_levels ||| #{levels}"
     puts '---------------------'
 
-    balanced?(node.right, num + 1, levels, isbalanced)
-    balanced?(node.left, num + 1, levels, isbalanced)
+    balanced_method(node.right, num + 1, levels)
+    balanced_method(node.left, num + 1, levels)
   end
 end
 
 tree = Tree.new
-array = [1, 2, 3, 4, 5, 9, 10, 23, 24]
+array = Array.new(15) { rand(1..100) }
 tree.build(array)
+puts "is the tree balanced ?"
+tree.balanced?
+puts "pre, post, in order"
+tree.preorder
+tree.postorder
+tree.inorder
+puts "let's ruin it"
+tree.insert(112)
+tree.insert(149)
+tree.insert(234)
+tree.insert(198)
+tree.insert(201)
+tree.insert(129)
+puts "now should be unbalanced"
+tree.balanced?
+puts "yo rebalance yourself you weak ass tree!!!"
+tree.rebalance
+puts "is this mf rebalance aghein???? qwiasjdweoweew"
+tree.balanced?
+puts "hehehehehehe leeveeeel pooostmaloone preeeecarious inorderino"
+tree.level_order
+tree.preorder
+tree.postorder
+tree.inorder
 binding.pry
