@@ -1,19 +1,18 @@
 # node class
 class Node
-  attr_reader :value, :left_node, :right_node
+  attr_reader :value, :left, :right
   attr_writer :value
   def initialize(value)
     @value = value
-    @left_node = nil
-    @right_node = nil
+    @left = nil
+    @right = nil
   end
 
-  def left_node=(left_node)
-    @left_node = (left_node unless left_node.nil?)
+  def left=(left)
+    @left = (left unless left.nil?)
   end
 
-  def right_node=(right_node)
-    @right_node = (right_node unless right_node.nil?)
+  def right=(right)
+    @right = (right unless right.nil?)
   end
-  
 end
