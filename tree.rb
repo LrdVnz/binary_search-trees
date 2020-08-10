@@ -64,8 +64,72 @@ class Tree
 
   def update_tree
     breadth_first
+    puts "thaoput |||| #{@output}"
+    newarr = @output
+    otherarr = newarr.delete_if{|a| a == "nil"}
+    puts "ouput 222 ||| #{@output}"
+    puts "cleaned output ||| #{otherarr}"
+    build_tree(@output)
+    breadth_first
     find_levels
     print_tree
+  end
+  
+  def preorder(root = @tree[0]) 
+   if root == nil 
+     return
+   end
+
+   puts root.value 
+   if root.left_node
+   puts root.left_node.value
+   else
+   puts "nil"
+   end 
+   if root.right_node  
+   puts root.right_node.value 
+   else
+    puts "nil"
+   end
+   puts "-----------"
+
+   preorder(root.left_node)
+   preorder(root.right_node)
+
+  end
+  
+  def inorder(root = @tree[0])
+   if root == nil 
+     return
+   end
+
+  if root.left_node
+  puts root.left_node.value
+  else
+  puts "nil"
+  end 
+  puts root.value
+  if root.right_node  
+  puts root.right_node.value 
+  else
+   puts "nil"
+  end
+  puts "-----------"
+
+  inorder(root.left_node)
+  inorder(root.right_node)
+
+  end
+
+  def postorder
+    root = tree[0]
+     until root == nil
+      puts root.left_node.value unless root.left_node.nil?
+      puts root.right_node.value unless root.right_node.nil?
+      puts root.value
+      puts "---------"
+      root = root.left_node
+     end
   end
 
   def delete_method(node, root)
@@ -133,6 +197,7 @@ class Tree
         queue << 'nil'
       end
     end
+    puts "output |||| #{@output}"
     @output
   end
 
@@ -140,32 +205,6 @@ class Tree
     is_empty = true
     array.each { |e| is_empty = false if e != 'nil' }
     is_empty
-  end
-
-  def breadth_first_rec(current = 0, queue = [@tree[0]], output = [], root = @tree[0])
-   if queue.all?{|n| n == 'nil'}
-    return output
-   end 
-
-   current = queue.shift
-   if current != 'nil'
-     if current.left_node
-       queue << current.left_node
-     else
-       queue << 'nil'
-     end
-     if current.right_node
-       queue << current.right_node
-     else
-       queue << 'nil'
-     end
-     output << current.value
-   else
-     output << 'nil'
-     queue << 'nil'
-     queue << 'nil'
-   end
-   breadth_first_rec(current, queue, output)
   end
 
   def delete_with_children(root, pos)
@@ -224,16 +263,61 @@ class Tree
 
   def print_tree
     num = 9
-    @all_levels.each_with_index do |arr, _i|
+    @all_levels.each do |arr|
       spaces = ' ' * num
       p arr.join(spaces).center(50)
       num -= 2
     end
   end
 
+  def horizontal_print(node = @tree[0], prefix="", is_left = true)
+    pretty_print(node.right_node, "#{prefix}#{is_left ? "│ " : " "}", false) if node.right_node
+    puts "#{prefix}#{is_left ? "└── " : "┌── "}#{node.value.to_s}"
+    pretty_print(node.left_node, "#{prefix}#{is_left ? " " : "│ "}", true) if node.left_node
+  end
+
+  def height(value) 
+    @all_levels.each_with_index do |arr, i|
+       arr.each do |n|
+       return i if n == value 
+       end
+    end
+  end
+
+  def depth(value)
+    @all_levels.reverse.each_with_index do |arr, i|
+      arr.each do |n|
+      return i if n == value 
+      end
+    end
+  end
+
+  def balanced?(node = @tree[0], num = 0 , levels = [], isbalanced = true)
+   if node == nil
+    if levels.length > 2 
+      levels = []
+    end
+    levels << num 
+    num = 0 
+    if levels.length == 2
+      if levels[-1] - levels[-2] > 1 || levels[-1] - levels[-2] < 0 
+      isbalanced = false
+     end
+    end
+    return isbalanced
+  end
+    puts "verify_node |||| #{node}"
+    puts "verify_num ||| #{num}"
+    puts "verify_levels ||| #{levels}"
+    puts "---------------------"
+
+     balanced?(node.right_node, num + 1, levels, isbalanced) 
+     balanced?(node.left_node, num + 1, levels, isbalanced)
+  end
+
 end
 
 tree = Tree.new
-array = [4, 5, 24, 23, 56, 7, 21, 4, 32, 2, 3]
+array = [1, 2, 3, 4, 5, 9, 10 , 23, 24]
 tree.build(array)
 binding.pry
