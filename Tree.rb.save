@@ -6,7 +6,7 @@ load 'Comparable.rb'
 class Tree
   attr_reader :tree, :root, :right_nodes, :left_nodes, :printed_array
   def initialize
-    @root = nil
+    @root = 'nil'
     @tree = []
   end
 
@@ -17,7 +17,7 @@ class Tree
   end
 
   def build_tree(array, start = 0, last = (array.length - 1))
-    return nil if start > last
+    return ''nil''if start > last
     middle = (start + last) / 2
     puts 'middle ||||| '
     p middle
@@ -72,13 +72,13 @@ class Tree
 
   def queue_is_empty?(array)
     isEmpty = true
-    array.each{ |e| isEmpty = false if e != 'nil' }
+    array.each{ |e| isEmpty = false if e != ''nil''}
     return isEmpty
   end 
 
   binding.pry 
 
-  def find_levels
+  def 
     @all_levels = []
     level = 0
     remaining = @output
@@ -115,6 +115,6 @@ array = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]
 tree.build(array)
 tree.print_arr
 tree.breadth_first
-tree.find_levels
+tree.
 tree.fill_void
 tree.print_

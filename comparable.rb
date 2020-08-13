@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # comparable module
 module Comparable
   def compare(node1, node2)

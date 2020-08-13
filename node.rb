@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # node class
 class Node
   attr_reader :value, :left, :right
@@ -7,12 +9,20 @@ class Node
     @left = nil
     @right = nil
   end
+  
+  def node=(value)
+   if value == 'nil'
+    @value = 'nil'
+    @left = 'nil'
+    @right = 'nil'
+   end
+  end
 
   def left=(left)
-    @left = (left unless left.nil?)
+    @left = left
   end
 
   def right=(right)
-    @right = (right unless right.nil?)
+    @right = right
   end
 end
