@@ -8,9 +8,9 @@ class Node
     @left = nil
     @right = nil
   end
-  
+
   def <=>(other)
-    @value <=> other.value 
+    @value <=> other.value
   end
 
   def node=(value)
