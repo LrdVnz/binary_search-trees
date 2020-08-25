@@ -1,5 +1,4 @@
 load 'node.rb'
-load 'comparable.rb'
 load 'helpers.rb'
 require 'pry'
 
