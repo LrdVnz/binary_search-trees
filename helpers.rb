@@ -2,16 +2,81 @@
 #module for making the tree class smaller. Putting methods here
 module Helpers
       def delete_method(node, root = @tree[0])
+        return root if root.nil?
         if node < root.value 
-          delete_method(node, root.left)
+          root.left = delete_method(node, root.left)
         elsif node > root.value
-          delete_method(node, root.right)
-        elsif node == root.value 
-          pos = @tree.index(root)
-          puts "root pos tree ||| #{pos}"
-          return @tree[pos].node= nil      
+          root.right = delete_method(node, root.right)
+        else
+          if root.left.nil?
+            temp = root.right 
+            root = nil 
+            return temp 
+          elsif root.right.nil? 
+            temp = root.left 
+            root = nil 
+            return temp 
+          end
+          temp = min_value_node(root.right)
+          root.value = temp.value 
+          root.right = delete_method(temp.value, root.right)
+        end
+      root
+      end
+
+
+  def insert_method(node, root = @tree[0])
+    if root.nil?
+      root = Node.new(value)
+    else 
+      if node < root.value
+        if root.left.nil?
+           root.left = Node.new(node)
+        else
+          insert_method(node, root.left)
+        end
+      else
+        if root.right.nil?
+          root.right = Node.new(node)
+        else
+          insert_method(node, root.right)
         end
       end
+    end
+  end
+
+  def min_value_node( node)
+    current = node 
+    while(current.left != nil) 
+     current = current.left 
+    end
+    return current
+ end
+
+ def delete_node(node, root = @tree[0])
+  if root == nil 
+    return root 
+  end
+  if node < root.value 
+    root.left = delete_node(node, root.left)
+  elsif node > root.value 
+    root.right = delete_node(node, root.right)
+  else
+    if root.left == nil
+      temp = root.right 
+      root = nil
+      return temp 
+    elsif root.right == nil 
+      temp = root.left 
+      root = nil 
+      return temp 
+    end
+    temp = min_value_node(root.right)
+    root.value = temp.value 
+    root.right = delete_node(temp.value, root.right)
+  end
+
+ end
 
       def queue_is_empty?(array)
         is_empty = true

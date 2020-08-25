@@ -29,7 +29,7 @@ class Tree
   end
 
   def delete(node)
-    delete_method(node)
+    delete_method(node, @tree[0])
     update
   end
 
@@ -96,20 +96,6 @@ class Tree
     root.left = build_tree(array, start, middle - 1)
     root.right = build_tree(array, middle + 1, last)
     root
-  end
-
-  def insert_method(node, root = @tree[0])
-    if root.left.nil? && node < root.value
-      return root.left = Node.new(node)
-    elsif root.right.nil? && node > root.value
-      return root.right = Node.new(node)
-    end
-
-    if node < root.value
-      insert_method(node, root.left)
-    elsif node > root.value
-      insert_method(node, root.right)
-    end
   end
 
   def level_order(root = @tree[0])
